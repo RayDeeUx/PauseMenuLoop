@@ -1,3 +1,4 @@
+#ifndef GEODE_IS_MACOS
 #include <Geode/modify/PlayLayer.hpp>
 #include "Manager.hpp"
 #include "Utils.hpp"
@@ -13,3 +14,4 @@ class $modify(MyPlayLayer, PlayLayer) {
         return canPause;
     }
 };
+#endif
