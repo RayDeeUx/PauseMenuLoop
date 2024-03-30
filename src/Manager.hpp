@@ -17,7 +17,7 @@ public:
 	FMOD::Channel* channel;
 	FMOD::System* system = FMODAudioEngine::sharedEngine()->m_system;
 	
-	std::string path = Mod::get()->getSettingValue<ghc::filesystem::path>("path").string();
+	std::string path = "";
 
 	static Manager* getSharedInstance(){
 
