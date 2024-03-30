@@ -72,4 +72,8 @@ class $modify(MyPauseLayer, PauseLayer) {
 		Manager::getSharedInstance()->channel->stop();
 		PauseLayer::onPracticeMode(sender);
 	}
+	void keyDown(cocos2d::enumKeyCodes p0) {
+		if (p0 == enumKeyCodes::KEY_Space) { Manager::getSharedInstance()->channel->stop(); }
+		PauseLayer::keyDown(p0);
+	}
 };
