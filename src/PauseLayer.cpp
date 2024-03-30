@@ -41,7 +41,6 @@ class $modify(MyPauseLayer, PauseLayer) {
 		} else {
 			manager->path = Mod::get()->getSettingValue<ghc::filesystem::path>("path").string();
 		}
-		log::info("{}", manager->path);
 		manager->system->createSound((manager->path).c_str(), FMOD_LOOP_NORMAL, nullptr, &(manager->sound));
 		manager->sound->setLoopCount(-1);
 		manager->system->playSound((manager->sound), nullptr, false, &(manager->channel));
