@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 class $modify(MyPauseLayer, PauseLayer) {
-	void onSettings(cocos2d::CCObject* sender) {
+	void onModSettings(cocos2d::CCObject* sender) {
 		openSettingsPopup(Mod::get());
 	}
 	void customSetup() {
@@ -20,7 +20,7 @@ class $modify(MyPauseLayer, PauseLayer) {
         btnIcon->setScale(.625f);
         emptyBtn->addChild(btnIcon);
         emptyBtn->setID("settings"_spr);
-        auto settingsBtn = CCMenuItemSpriteExtra::create(emptyBtn, this, menu_selector(MyPauseLayer::onSettings));
+        auto settingsBtn = CCMenuItemSpriteExtra::create(emptyBtn, this, menu_selector(MyPauseLayer::onModSettings));
 		if (auto menu = getChildByID("left-button-menu")) {
 			menu->addChild(settingsBtn);
 			menu->updateLayout();
