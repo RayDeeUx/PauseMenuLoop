@@ -38,6 +38,8 @@ class $modify(MyPauseLayer, PauseLayer) {
 			}
 			if (!menuLoops.empty()) { manager->path = menuLoops[rand() % menuLoops.size()].c_str(); }
 			else { manager->path = Mod::get()->getSettingValue<ghc::filesystem::path>("path").string(); }
+		} else {
+			manager->path = Mod::get()->getSettingValue<ghc::filesystem::path>("path").string();
 		}
 		manager->system->createSound((manager->path).c_str(), FMOD_LOOP_NORMAL, nullptr, &(manager->sound));
 		manager->sound->setLoopCount(-1);
