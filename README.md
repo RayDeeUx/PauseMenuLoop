@@ -19,3 +19,5 @@ This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.
 Demo:
 
 https://github.com/RayDeeUx/PauseMenuLoop/assets/51521765/3370434a-c3ab-445a-997a-740d7bec278b
+
+This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.
