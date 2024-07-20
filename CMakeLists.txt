@@ -11,7 +11,6 @@ add_library(${PROJECT_NAME} SHARED
     src/Utils.cpp
         
     src/PauseLayer.cpp
-    src/PlayLayer.cpp
 )
 
 if (NOT DEFINED ENV{GEODE_SDK})
