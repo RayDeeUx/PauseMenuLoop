@@ -5,7 +5,7 @@
 		"android": "2.206",
 		"win": "2.206"
 	},
-	"version": "v1.1.0",
+	"version": "v1.2.0",
 	"id": "raydeeux.pausemenuloop",
 	"name": "PauseMenuLoop",
 	"developers": ["RayDeeUx", "Weebify"],
@@ -44,11 +44,25 @@
 		},
 		"volume": {
 			"name": "Volume (%)",
-			"description": "Set the volume of of your pause menu loop (as a percentage).",
+			"description": "Set the volume of your pause menu loop (as a percentage).",
 			"type": "int",
 			"default": 50,
 			"min": 0,
 			"max": 100
+		},
+		"muffle": {
+			"name": "Muffle Filter",
+			"description": "<cl>Original code adapted from Undefined's EditorMusic mod.</c>\n\nEnables a low-pass audio filter for a \"muffle\" effect. Useful when playing copyrighted songs while streaming to internet audiences.",
+			"type": "bool",
+			"default": false
+		},
+		"muffleStrength": {
+			"name": "Muffle Filter Strength",
+			"description": "Set the strength of the muffle filter. Go experiment! (The higher this value, the stronger the filter.)",
+			"type": "int",
+			"default": 1,
+			"min": 0,
+			"max": 20
 		},
 		"reduction": {
 			"name": "Volume Reduction (Multiplier)",

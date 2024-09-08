@@ -3,7 +3,7 @@
 namespace Utils {
 	
 	bool isSupportedExtension(std::string extension) {
-		return (strcmp(".mp3", extension.c_str()) == 0 || strcmp(".wav", extension.c_str()) == 0 || strcmp(".ogg", extension.c_str()) == 0);
+		return !extension.empty() && (extension == ".mp3" || extension == ".ogg" || extension == ".oga" || extension == ".wav" || extension == ".flac");
 	}
 	
 	bool isSceneRunning(std::string sceneName) { return CCDirector::get()->getRunningScene()->getChildByID(sceneName.c_str()); }
