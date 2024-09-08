@@ -11,7 +11,10 @@ static constexpr float muffleConstant = 2000.f; // undefined set a random number
 void applyMuffle(Manager *manager = Manager::getSharedInstance()) {
 	manager->system->createDSPByType(FMOD_DSP_TYPE_LOWPASS, &manager->lowPassFilterDSP);
 	manager->lowPassFilterDSP->setParameterFloat(FMOD_DSP_LOWPASS_RESONANCE, 0.f);
-	manager->lowPassFilterDSP->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, muffleConstant);
+	float cutoff = INT_FAST32_MAX;
+	int64_t muffleStrength = Mod::get()->getSettingValue<int64_t>("muffleStrength");
+	if (muffleStrength != 0) cutoff = muffleConstant / muffleStrength;
+	manager->lowPassFilterDSP->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, cutoff);
 	manager->channel->addDSP(0, manager->lowPassFilterDSP);
 }
 
