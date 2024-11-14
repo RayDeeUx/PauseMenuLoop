@@ -1,6 +1,6 @@
+#include <Geode/loader/SettingV3.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <Geode/ui/GeodeUI.hpp>
-#include <Geode/Settings.hpp>
 #include "Manager.hpp"
 #include "Utils.hpp"
 
