@@ -1,6 +1,7 @@
 #include <Geode/loader/SettingV3.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <Geode/ui/GeodeUI.hpp>
+#include "Settings.hpp"
 #include "Manager.hpp"
 #include "Utils.hpp"
 
@@ -25,6 +26,7 @@ void setVolume(int64_t volumeSetting = Mod::get()->getSettingValue<int64_t>("vol
 // muffle filter adapted from undefined with consent: https://discord.com/channels/911701438269386882/911702535373475870/1277758859204890738
 
 $on_mod(Loaded) {
+	Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	listenForSettingChanges<int64_t>("muffleStrength", [](int64_t muffleStrength) {
 		float cutoff = INT_FAST32_MAX;
 		if (muffleStrength != 0) cutoff = muffleConstant / muffleStrength;

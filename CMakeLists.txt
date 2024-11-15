@@ -9,7 +9,10 @@ project(PauseMenuLoop VERSION 1.0.0)
 add_library(${PROJECT_NAME} SHARED
     src/Manager.cpp
     src/Utils.cpp
-        
+
+    src/Settings.cpp
+    src/Settings.hpp
+
     src/PauseLayer.cpp
 )
 
