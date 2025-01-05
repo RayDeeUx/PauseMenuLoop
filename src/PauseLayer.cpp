@@ -26,7 +26,7 @@ void setVolume(int64_t volumeSetting = Mod::get()->getSettingValue<int64_t>("vol
 // muffle filter adapted from undefined with consent: https://discord.com/channels/911701438269386882/911702535373475870/1277758859204890738
 
 $on_mod(Loaded) {
-	Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
+	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	listenForSettingChanges<int64_t>("muffleStrength", [](int64_t muffleStrength) {
 		float cutoff = INT_FAST32_MAX;
 		if (muffleStrength != 0) cutoff = muffleConstant / muffleStrength;
@@ -51,7 +51,8 @@ class $modify(MyPauseLayer, PauseLayer) {
 	}
 	void customSetup() {
 		PauseLayer::customSetup();
-		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
+		const auto mod = Mod::get();
+		if (!mod->getSettingValue<bool>("enabled")) return;
 		auto manager = Manager::getSharedInstance();
 		auto emptyBtn = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
         emptyBtn->setScale(.75f);
@@ -65,27 +66,24 @@ class $modify(MyPauseLayer, PauseLayer) {
 			menu->addChild(settingsBtn);
 			menu->updateLayout();
 		}
-		if (Mod::get()->getSettingValue<bool>("random")) {
+		auto singlePauseMenuLoop = mod->getSettingValue<std::filesystem::path>("file").string();
+		if (!std::filesystem::exists(singlePauseMenuLoop)) return log::error("{} DOES NOT EXIST", singlePauseMenuLoop);
+		if (mod->getSettingValue<bool>("random")) {
 			// original vector logic by adam729's random death sounds
 			std::vector<std::string> menuLoops;
-            std::smatch match;
-			for (const auto& file : std::filesystem::directory_iterator(Mod::get()->getConfigDir().string())) {
+			for (const auto& file : std::filesystem::directory_iterator(mod->getConfigDir().string())) {
 				std::string tempPath = file.path().string();
 				std::string tempExtension = file.path().extension().string();
-				if (Utils::isSupportedExtension(tempExtension)) {
-					menuLoops.push_back(tempPath);
-				}
+				if (Utils::isSupportedExtension(tempExtension)) menuLoops.push_back(tempPath);
 			}
-			if (!menuLoops.empty()) { manager->path = menuLoops[rand() % menuLoops.size()].c_str(); }
-			else { manager->path = Mod::get()->getSettingValue<std::filesystem::path>("path").string(); }
-		} else {
-			manager->path = Mod::get()->getSettingValue<std::filesystem::path>("path").string();
-		}
-		manager->system->createSound((manager->path).c_str(), FMOD_LOOP_NORMAL, nullptr, &(manager->sound));
+			if (!menuLoops.empty()) manager->path = menuLoops[rand() % menuLoops.size()];
+			else manager->path = singlePauseMenuLoop;
+		} else manager->path = singlePauseMenuLoop;
+		manager->system->createSound(manager->path.c_str(), FMOD_LOOP_NORMAL, nullptr, &manager->sound);
 		manager->sound->setLoopCount(-1);
-		manager->system->playSound((manager->sound), nullptr, false, &(manager->channel));
+		manager->system->playSound(manager->sound, nullptr, false, &(manager->channel));
 		setVolume();
-		if (Mod::get()->getSettingValue<bool>("muffle")) applyMuffle();
+		if (mod->getSettingValue<bool>("muffle")) applyMuffle();
 	}
 	void onResume(cocos2d::CCObject* sender) {
 		stopMusicRemoveLowPass();
@@ -117,7 +115,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		PauseLayer::onPracticeMode(sender);
 	}
 	void keyDown(cocos2d::enumKeyCodes p0) {
-		if (p0 == enumKeyCodes::KEY_Space) { Manager::getSharedInstance()->channel->stop(); }
+		if (p0 == enumKeyCodes::KEY_Space) stopMusicRemoveLowPass();
 		PauseLayer::keyDown(p0);
 	}
 };

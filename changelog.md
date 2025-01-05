@@ -1,4 +1,6 @@
 # PauseMenuLoop Changelog
+## v1.3.1
+- Fix being unable to use the `Pause Menu Loop` setting. \*groans in regret\*
 ## v1.3.0
 - Port to 2.2074.
 ## v1.2.0
