@@ -27,7 +27,7 @@
 		"file": {
 			"name": "Pause Menu Loop",
 			"description": "Choose an audio file to loop.",
-			"type": "path",
+			"type": "file",
 			"default": "Please choose an audio file.",
 			"control": {
 				"filters": [
