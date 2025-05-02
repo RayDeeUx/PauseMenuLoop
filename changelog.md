@@ -1,4 +1,6 @@
 # PauseMenuLoop Changelog
+## v1.3.2
+- Experimental iOS support.
 ## v1.3.1
 - Fix being unable to use the `Pause Menu Loop` setting. \*groans in regret\*
 ## v1.3.0
