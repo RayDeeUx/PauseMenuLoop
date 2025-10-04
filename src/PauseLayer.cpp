@@ -41,35 +41,32 @@ $on_mod(Loaded) {
 }
 
 class $modify(MyPlayLayer, PlayLayer) {
+	void findAudioFilesIn(std::vector<std::string>& menuLoops, const std::filesystem::path& folder) {
+		if (!std::filesystem::exists(folder)) return;
+		for (const auto& file : std::filesystem::directory_iterator(folder)) {
+			std::string tempPath = geode::utils::string::pathToString(file.path());
+			if (Utils::isSupportedExtension(file.path().extension())) menuLoops.push_back(tempPath);
+		}
+	}
+
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
 		if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 		Mod* mod = Mod::get();
 		Manager* manager = Manager::getSharedInstance();
 		const std::filesystem::path& audioFile = mod->getSettingValue<std::filesystem::path>("file");
-		if (!std::filesystem::exists(audioFile)) {
-			log::error("{} DOES NOT EXIST", audioFile);
-			return true;
-		}
 		auto singlePauseMenuLoop = geode::utils::string::pathToString(audioFile);
 		if (mod->getSettingValue<bool>("random")) {
 			// original vector logic by adam729's random death sounds
 			std::vector<std::string> menuLoops;
-			for (const auto& file : std::filesystem::directory_iterator(mod->getConfigDir())) {
-				std::string tempPath = geode::utils::string::pathToString(file.path());
-				std::string tempExtension = geode::utils::string::pathToString(file.path().extension());
-				if (Utils::isSupportedExtension(tempExtension)) menuLoops.push_back(tempPath);
-			}
-			const std::filesystem::path& theOtherFolder = mod->getSettingValue<std::filesystem::path>("folder");
-			if (std::filesystem::exists(theOtherFolder)) {
-				for (const auto& file : std::filesystem::directory_iterator(theOtherFolder)) {
-					std::string tempPath = geode::utils::string::pathToString(file.path());
-					std::string tempExtension = geode::utils::string::pathToString(file.path().extension());
-					if (Utils::isSupportedExtension(tempExtension)) menuLoops.push_back(tempPath);
-				}
-			}
+			MyPlayLayer::findAudioFilesIn(menuLoops, mod->getConfigDir());
+			MyPlayLayer::findAudioFilesIn(menuLoops, mod->getSettingValue<std::filesystem::path>("folder"));
 			if (!menuLoops.empty()) manager->path = menuLoops[rand() % menuLoops.size()];
 			else manager->path = singlePauseMenuLoop;
 		} else manager->path = singlePauseMenuLoop;
+		if (!std::filesystem::exists(manager->path)) {
+			log::error("{} DOES NOT EXIST", manager->path);
+			return true;
+		}
 		manager->system->createSound(manager->path.c_str(), FMOD_LOOP_NORMAL, nullptr, &manager->sound);
 		return true;
 	}
