@@ -1,4 +1,8 @@
 # PauseMenuLoop Changelog
+## v1.4.0
+- Experimental iOS JIT-less support.
+- Refactored how song randomization works--it happens every time you enter a level now, instead of every time you pause. This was to minimize lag when pausing a level.
+- Fixed a few nasty bugs that led to the pause menu loop playing outside of the pause menu. Yikes!
 ## v1.3.2
 - Experimental iOS support.
 ## v1.3.1
