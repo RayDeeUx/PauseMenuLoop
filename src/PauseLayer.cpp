@@ -45,7 +45,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!std::filesystem::exists(folder)) return;
 		for (const auto& file : std::filesystem::directory_iterator(folder)) {
 			std::string tempPath = geode::utils::string::pathToString(file.path());
-			if (Utils::isSupportedExtension(file.path().extension())) menuLoops.push_back(tempPath);
+			if (Utils::isSupportedExtension(geode::utils::string::pathToString(file.path().extension()))) menuLoops.push_back(tempPath);
 		}
 	}
 
