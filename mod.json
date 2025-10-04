@@ -48,6 +48,12 @@
 				]
 			}
 		},
+		"folder": {
+			"name": "Other Folder of Pause Menu Loops",
+			"description": "Choose a second folder (besides the mod's config folder) containing audio files for looping.",
+			"type": "folder",
+			"default": ""
+		},
 		"random": {
 			"name": "Choose Random Loop",
 			"description": "Allows the mod to choose a menu loop randomly <cy>from the mod's config directory</c>. Click on the little pencil in the mod's info layer <cl>(preferably without Mega Hack loaded)</c> to find this directory.",

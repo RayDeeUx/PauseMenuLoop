@@ -41,12 +41,15 @@ $on_mod(Loaded) {
 }
 
 class $modify(MyPlayLayer, PlayLayer) {
-	void setupHasCompleted() {
-		PlayLayer::setupHasCompleted();
+	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
+		if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 		Mod* mod = Mod::get();
 		Manager* manager = Manager::getSharedInstance();
 		const std::filesystem::path& audioFile = mod->getSettingValue<std::filesystem::path>("file");
-		if (!std::filesystem::exists(audioFile)) return log::error("{} DOES NOT EXIST", audioFile);
+		if (!std::filesystem::exists(audioFile)) {
+			log::error("{} DOES NOT EXIST", audioFile);
+			return true;
+		}
 		auto singlePauseMenuLoop = geode::utils::string::pathToString(audioFile);
 		if (mod->getSettingValue<bool>("random")) {
 			// original vector logic by adam729's random death sounds
@@ -56,9 +59,19 @@ class $modify(MyPlayLayer, PlayLayer) {
 				std::string tempExtension = geode::utils::string::pathToString(file.path().extension());
 				if (Utils::isSupportedExtension(tempExtension)) menuLoops.push_back(tempPath);
 			}
+			const std::filesystem::path& theOtherFolder = mod->getSettingValue<std::filesystem::path>("folder");
+			if (std::filesystem::exists(theOtherFolder)) {
+				for (const auto& file : std::filesystem::directory_iterator(theOtherFolder)) {
+					std::string tempPath = geode::utils::string::pathToString(file.path());
+					std::string tempExtension = geode::utils::string::pathToString(file.path().extension());
+					if (Utils::isSupportedExtension(tempExtension)) menuLoops.push_back(tempPath);
+				}
+			}
 			if (!menuLoops.empty()) manager->path = menuLoops[rand() % menuLoops.size()];
 			else manager->path = singlePauseMenuLoop;
 		} else manager->path = singlePauseMenuLoop;
+		manager->system->createSound(manager->path.c_str(), FMOD_LOOP_NORMAL, nullptr, &manager->sound);
+		return true;
 	}
 	void resume() {
 		PlayLayer::resume();
@@ -87,7 +100,6 @@ class $modify(MyPauseLayer, PauseLayer) {
 			menu->addChild(settingsBtn);
 			menu->updateLayout();
 		}
-		manager->system->createSound(manager->path.c_str(), FMOD_LOOP_NORMAL, nullptr, &manager->sound);
 		manager->sound->setLoopCount(-1);
 		manager->system->playSound(manager->sound, nullptr, false, &(manager->channel));
 		setVolume();
