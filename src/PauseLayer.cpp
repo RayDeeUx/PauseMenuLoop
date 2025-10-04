@@ -51,7 +51,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
 		if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
-		Utils::stopMusicRemoveLowPass();
+		Utils::stopMusicRemoveLowPass(); // in case someone's got enough hubris to use mishpro's comment in levels mod to exit a playlayer to enter someone else's level or whatever idk
 		Mod* mod = Mod::get();
 		Manager* manager = Manager::getSharedInstance();
 		const std::filesystem::path& audioFile = mod->getSettingValue<std::filesystem::path>("file");
