@@ -51,6 +51,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
 		if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
+		Utils::stopMusicRemoveLowPass();
 		Mod* mod = Mod::get();
 		Manager* manager = Manager::getSharedInstance();
 		const std::filesystem::path& audioFile = mod->getSettingValue<std::filesystem::path>("file");
