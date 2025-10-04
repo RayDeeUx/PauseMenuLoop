@@ -87,7 +87,6 @@ class $modify(MyPauseLayer, PauseLayer) {
 	void customSetup() {
 		PauseLayer::customSetup();
 		const auto mod = Mod::get();
-		if (!mod->getSettingValue<bool>("enabled")) return;
 		auto manager = Manager::getSharedInstance();
 		auto emptyBtn = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
         emptyBtn->setScale(.75f);
@@ -101,6 +100,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 			menu->addChild(settingsBtn);
 			menu->updateLayout();
 		}
+		if (!mod->getSettingValue<bool>("enabled")) return;
 		manager->sound->setLoopCount(-1);
 		manager->system->playSound(manager->sound, nullptr, false, &(manager->channel));
 		setVolume();
