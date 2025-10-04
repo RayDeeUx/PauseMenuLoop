@@ -74,6 +74,10 @@ class $modify(MyPlayLayer, PlayLayer) {
 		PlayLayer::resume();
 		Utils::stopMusicRemoveLowPass();
 	}
+	void onQuit() {
+		PlayLayer::onQuit();
+		Utils::stopMusicRemoveLowPass();
+	}
 };
 
 class $modify(MyPauseLayer, PauseLayer) {
