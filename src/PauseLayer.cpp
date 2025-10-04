@@ -78,10 +78,6 @@ class $modify(MyPlayLayer, PlayLayer) {
 		PlayLayer::onQuit();
 		Utils::stopMusicRemoveLowPass();
 	}
-	void resetAudio() {
-		PlayLayer::resetAudio();
-		Utils::stopMusicRemoveLowPass();
-	}
 };
 
 class $modify(MyPauseLayer, PauseLayer) {
@@ -113,5 +109,9 @@ class $modify(MyPauseLayer, PauseLayer) {
 	void removeMeAndCleanup() {
 		PauseLayer::removeMeAndCleanup();
 		Utils::stopMusicRemoveLowPass();
+	}
+	void onEdit(CCObject* sender) {
+		Utils::stopMusicRemoveLowPass();
+		PauseLayer::onEdit(sender);
 	}
 };
