@@ -1,5 +1,5 @@
-#include <Geode/loader/SettingV3.hpp>
 #include <Geode/modify/PauseLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <Geode/ui/GeodeUI.hpp>
 #include "Settings.hpp"
 #include "Manager.hpp"
@@ -40,14 +40,35 @@ $on_mod(Loaded) {
 	});
 }
 
+class $modify(MyPlayLayer, PlayLayer) {
+	void setupHasCompleted() {
+		PlayLayer::setupHasCompleted();
+		Mod* mod = Mod::get();
+		Manager* manager = Manager::getSharedInstance();
+		const std::filesystem::path& audioFile = mod->getSettingValue<std::filesystem::path>("file");
+		if (!std::filesystem::exists(audioFile)) return log::error("{} DOES NOT EXIST", audioFile);
+		auto singlePauseMenuLoop = geode::utils::string::pathToString(audioFile);
+		if (mod->getSettingValue<bool>("random")) {
+			// original vector logic by adam729's random death sounds
+			std::vector<std::string> menuLoops;
+			for (const auto& file : std::filesystem::directory_iterator(mod->getConfigDir())) {
+				std::string tempPath = geode::utils::string::pathToString(file.path());
+				std::string tempExtension = geode::utils::string::pathToString(file.path().extension());
+				if (Utils::isSupportedExtension(tempExtension)) menuLoops.push_back(tempPath);
+			}
+			if (!menuLoops.empty()) manager->path = menuLoops[rand() % menuLoops.size()];
+			else manager->path = singlePauseMenuLoop;
+		} else manager->path = singlePauseMenuLoop;
+	}
+	void resume() {
+		PlayLayer::resume();
+		Utils::stopMusicRemoveLowPass();
+	}
+};
+
 class $modify(MyPauseLayer, PauseLayer) {
 	void onModSettings(cocos2d::CCObject* sender) {
 		openSettingsPopup(Mod::get());
-	}
-	void stopMusicRemoveLowPass(Manager *manager = Manager::getSharedInstance()) {
-		manager->channel->removeDSP(manager->lowPassFilterDSP);
-		manager->lowPassFilterDSP->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 0.f);
-		manager->channel->stop();
 	}
 	void customSetup() {
 		PauseLayer::customSetup();
@@ -66,56 +87,14 @@ class $modify(MyPauseLayer, PauseLayer) {
 			menu->addChild(settingsBtn);
 			menu->updateLayout();
 		}
-		auto singlePauseMenuLoop = mod->getSettingValue<std::filesystem::path>("file").string();
-		if (!std::filesystem::exists(singlePauseMenuLoop)) return log::error("{} DOES NOT EXIST", singlePauseMenuLoop);
-		if (mod->getSettingValue<bool>("random")) {
-			// original vector logic by adam729's random death sounds
-			std::vector<std::string> menuLoops;
-			for (const auto& file : std::filesystem::directory_iterator(mod->getConfigDir().string())) {
-				std::string tempPath = file.path().string();
-				std::string tempExtension = file.path().extension().string();
-				if (Utils::isSupportedExtension(tempExtension)) menuLoops.push_back(tempPath);
-			}
-			if (!menuLoops.empty()) manager->path = menuLoops[rand() % menuLoops.size()];
-			else manager->path = singlePauseMenuLoop;
-		} else manager->path = singlePauseMenuLoop;
 		manager->system->createSound(manager->path.c_str(), FMOD_LOOP_NORMAL, nullptr, &manager->sound);
 		manager->sound->setLoopCount(-1);
 		manager->system->playSound(manager->sound, nullptr, false, &(manager->channel));
 		setVolume();
 		if (mod->getSettingValue<bool>("muffle")) applyMuffle();
 	}
-	void onResume(cocos2d::CCObject* sender) {
-		stopMusicRemoveLowPass();
-		PauseLayer::onResume(sender);
-	}
-	void onQuit(cocos2d::CCObject* sender) {
-		stopMusicRemoveLowPass();
-		PauseLayer::onQuit(sender);
-	}
-	void onRestart(cocos2d::CCObject* sender) {
-		stopMusicRemoveLowPass();
-		PauseLayer::onRestart(sender);
-	}
-	void onRestartFull(cocos2d::CCObject* sender) {
-		stopMusicRemoveLowPass();
-		PauseLayer::onRestartFull(sender);
-	}
-	void onEdit(cocos2d::CCObject* sender) {
-		stopMusicRemoveLowPass();
-		PauseLayer::onEdit(sender);
-	}
-	void onNormalMode(cocos2d::CCObject* sender) {
-		stopMusicRemoveLowPass();
-		PauseLayer::onNormalMode(sender);
-	}
-
-	void onPracticeMode(cocos2d::CCObject* sender) {
-		stopMusicRemoveLowPass();
-		PauseLayer::onPracticeMode(sender);
-	}
-	void keyDown(cocos2d::enumKeyCodes p0) {
-		if (p0 == enumKeyCodes::KEY_Space) stopMusicRemoveLowPass();
-		PauseLayer::keyDown(p0);
+	void removeMeAndCleanup() {
+		PauseLayer::removeMeAndCleanup();
+		Utils::stopMusicRemoveLowPass();
 	}
 };
