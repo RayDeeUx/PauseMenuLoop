@@ -71,14 +71,22 @@ class $modify(MyPlayLayer, PlayLayer) {
 		manager->system->createSound(manager->path.c_str(), FMOD_LOOP_NORMAL, nullptr, &manager->sound);
 		return true;
 	}
+
 	void resume() {
 		PlayLayer::resume();
 		Utils::stopMusicRemoveLowPass();
 	}
+
 	void resetLevel() {
 		PlayLayer::resetLevel();
 		Utils::stopMusicRemoveLowPass();
 	}
+
+	void togglePracticeMode(bool practiceMode) {
+		PlayLayer::togglePracticeMode();
+		Utils::stopMusicRemoveLowPass();
+	}
+
 	void onQuit() {
 		PlayLayer::onQuit();
 		Utils::stopMusicRemoveLowPass();
