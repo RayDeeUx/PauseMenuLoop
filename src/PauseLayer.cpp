@@ -77,6 +77,11 @@ class $modify(MyPlayLayer, PlayLayer) {
 		Utils::stopMusicRemoveLowPass();
 	}
 
+	void resumeAndRestart(bool p0) {
+		PlayLayer::resumeAndRestart(p0);
+		Utils::stopMusicRemoveLowPass();
+	}
+
 	void resetLevel() {
 		PlayLayer::resetLevel();
 		Utils::stopMusicRemoveLowPass();
