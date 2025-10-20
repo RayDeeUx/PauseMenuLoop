@@ -87,8 +87,8 @@ class $modify(MyPlayLayer, PlayLayer) {
 		Utils::stopMusicRemoveLowPass();
 	}
 
-	void togglePracticeMode(bool practiceMode) {
-		PlayLayer::togglePracticeMode();
+	void togglePracticeMode(bool p0) {
+		PlayLayer::togglePracticeMode(p0);
 		Utils::stopMusicRemoveLowPass();
 	}
 
