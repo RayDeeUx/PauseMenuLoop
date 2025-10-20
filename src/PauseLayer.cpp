@@ -104,26 +104,37 @@ class $modify(MyPlayLayer, PlayLayer) {
 };
 
 class $modify(MyPauseLayer, PauseLayer) {
+	struct Fields {
+		~Fields() {
+			Utils::stopMusicRemoveLowPass();
+		}
+	}
+
 	void onModSettings(cocos2d::CCObject* sender) {
 		openSettingsPopup(Mod::get());
 	}
+
 	void customSetup() {
 		PauseLayer::customSetup();
 		const auto mod = Mod::get();
 		auto manager = Manager::getSharedInstance();
+
 		auto emptyBtn = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
-        emptyBtn->setScale(.75f);
-        auto btnIcon = CCSprite::create("btn.png"_spr);
-        btnIcon->setPosition(emptyBtn->getContentSize() / 2);
-        btnIcon->setScale(.625f);
-        emptyBtn->addChild(btnIcon);
-        emptyBtn->setID("settings"_spr);
-        auto settingsBtn = CCMenuItemSpriteExtra::create(emptyBtn, this, menu_selector(MyPauseLayer::onModSettings));
+		emptyBtn->setScale(.75f);
+		auto btnIcon = CCSprite::create("btn.png"_spr);
+		btnIcon->setPosition(emptyBtn->getContentSize() / 2);
+		btnIcon->setScale(.625f);
+		emptyBtn->addChild(btnIcon);
+		emptyBtn->setID("settings"_spr);
+		emptyBtn->->setUserObject("alphalaneous.tooltips/tooltip", CCString::create("PauseMenuLoop Settings"));
+
+		auto settingsBtn = CCMenuItemSpriteExtra::create(emptyBtn, this, menu_selector(MyPauseLayer::onModSettings));
 		if (auto menu = getChildByID("left-button-menu")) {
 			menu->addChild(settingsBtn);
 			menu->updateLayout();
 		}
 		if (!mod->getSettingValue<bool>("enabled")) return;
+
 		manager->sound->setLoopCount(-1);
 		manager->system->playSound(manager->sound, nullptr, false, &(manager->channel));
 		setVolume();
