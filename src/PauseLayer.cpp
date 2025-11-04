@@ -108,7 +108,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		~Fields() {
 			Utils::stopMusicRemoveLowPass();
 		}
-	}
+	};
 
 	void onModSettings(cocos2d::CCObject* sender) {
 		openSettingsPopup(Mod::get());
