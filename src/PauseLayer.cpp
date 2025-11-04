@@ -126,7 +126,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 		btnIcon->setScale(.625f);
 		emptyBtn->addChild(btnIcon);
 		emptyBtn->setID("settings"_spr);
-		emptyBtn->->setUserObject("alphalaneous.tooltips/tooltip", CCString::create("PauseMenuLoop Settings"));
+		emptyBtn->setUserObject("alphalaneous.tooltips/tooltip", CCString::create("PauseMenuLoop Settings"));
 
 		auto settingsBtn = CCMenuItemSpriteExtra::create(emptyBtn, this, menu_selector(MyPauseLayer::onModSettings));
 		if (auto menu = getChildByID("left-button-menu")) {
