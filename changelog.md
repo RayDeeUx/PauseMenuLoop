@@ -1,4 +1,6 @@
 # PauseMenuLoop Changelog
+## v1.4.2
+- Port to GD 2.2081.
 ## v1.4.1
 - Fix even nastier bugs that prevented the pause menu loop from stopping properly.
 ## v1.4.0
