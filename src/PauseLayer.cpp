@@ -52,6 +52,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
 		if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 		Utils::stopMusicRemoveLowPass(); // in case someone's got enough hubris to use mishpro's comment in levels mod to exit a playlayer to enter someone else's level or whatever idk
+		if (Loader::get()->isModLoaded("joseii.ventilla" && Loader::get()->getLoadedMod("joseii.ventilla")->getSettingValue<bool>("play-in-pause-menu"))) return true;
 		Mod* mod = Mod::get();
 		Manager* manager = Manager::getSharedInstance();
 		const std::filesystem::path& audioFile = mod->getSettingValue<std::filesystem::path>("file");
@@ -119,21 +120,24 @@ class $modify(MyPauseLayer, PauseLayer) {
 		const auto mod = Mod::get();
 		auto manager = Manager::getSharedInstance();
 
-		auto emptyBtn = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
-		emptyBtn->setScale(.75f);
-		auto btnIcon = CCSprite::create("btn.png"_spr);
-		btnIcon->setPosition(emptyBtn->getContentSize() / 2);
-		btnIcon->setScale(.625f);
-		emptyBtn->addChild(btnIcon);
-		emptyBtn->setID("settings"_spr);
-		emptyBtn->setUserObject("alphalaneous.tooltips/tooltip", CCString::create("PauseMenuLoop Settings"));
+		if (mod->getSettingValue<bool>("pauseButton")) {
+			auto emptyBtn = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
+			emptyBtn->setScale(.75f);
+			auto btnIcon = CCSprite::create("btn.png"_spr);
+			btnIcon->setPosition(emptyBtn->getContentSize() / 2);
+			btnIcon->setScale(.625f);
+			emptyBtn->addChild(btnIcon);
+			emptyBtn->setID("settings"_spr);
+			emptyBtn->setUserObject("alphalaneous.tooltips/tooltip", CCString::create("PauseMenuLoop Settings"));
 
-		auto settingsBtn = CCMenuItemSpriteExtra::create(emptyBtn, this, menu_selector(MyPauseLayer::onModSettings));
-		if (auto menu = getChildByID("left-button-menu")) {
-			menu->addChild(settingsBtn);
-			menu->updateLayout();
+			auto settingsBtn = CCMenuItemSpriteExtra::create(emptyBtn, this, menu_selector(MyPauseLayer::onModSettings));
+			if (auto menu = getChildByID("left-button-menu")) {
+				menu->addChild(settingsBtn);
+				menu->updateLayout();
+			}
 		}
-		if (!mod->getSettingValue<bool>("enabled")) return;
+
+		if (!mod->getSettingValue<bool>("enabled") || !manager->sound || (Loader::get()->isModLoaded("joseii.ventilla" && Loader::get()->getLoadedMod("joseii.ventilla")->getSettingValue<bool>("play-in-pause-menu")))) return;
 
 		manager->sound->setLoopCount(-1);
 		manager->system->playSound(manager->sound, nullptr, false, &(manager->channel));

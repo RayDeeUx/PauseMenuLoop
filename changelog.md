@@ -1,4 +1,6 @@
 # PauseMenuLoop Changelog
+## v1.4.4
+- Peer pressured into adding a new setting to hide the button in the pause menu.
 ## v1.4.2 and v1.4.3
 - Port to GD 2.2081.
 ## v1.4.1

@@ -1,12 +1,12 @@
 {
-	"geode": "5.0.0-beta.2",
+	"geode": "5.0.0-beta.3",
 	"gd": {
 		"mac": "2.2081",
 		"win": "2.2081",
 		"ios": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v1.4.3",
+	"version": "v1.4.4",
 	"id": "raydeeux.pausemenuloop",
 	"name": "PauseMenuLoop",
 	"developers": [
@@ -53,6 +53,11 @@
 			"description": "Choose a second folder (besides the mod's config folder) containing audio files for looping.",
 			"type": "folder",
 			"default": ""
+		},
+		"pauseButton": {
+			"name": "Add Pause Menu Button",
+			"type": "bool",
+			"default": true
 		},
 		"random": {
 			"name": "Choose Random Loop",
