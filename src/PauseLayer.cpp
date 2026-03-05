@@ -52,7 +52,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
 		if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 		Utils::stopMusicRemoveLowPass(); // in case someone's got enough hubris to use mishpro's comment in levels mod to exit a playlayer to enter someone else's level or whatever idk
-		if (Loader::get()->isModLoaded("joseii.ventilla" && Loader::get()->getLoadedMod("joseii.ventilla")->getSettingValue<bool>("play-in-pause-menu"))) return true;
+		if ((Loader::get()->isModLoaded("joseii.ventilla") && Loader::get()->getLoadedMod("joseii.ventilla")->getSettingValue<bool>("play-in-pause-menu"))) return true;
 		Mod* mod = Mod::get();
 		Manager* manager = Manager::getSharedInstance();
 		const std::filesystem::path& audioFile = mod->getSettingValue<std::filesystem::path>("file");
@@ -137,7 +137,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 			}
 		}
 
-		if (!mod->getSettingValue<bool>("enabled") || !manager->sound || (Loader::get()->isModLoaded("joseii.ventilla" && Loader::get()->getLoadedMod("joseii.ventilla")->getSettingValue<bool>("play-in-pause-menu")))) return;
+		if (!mod->getSettingValue<bool>("enabled") || !manager->sound || ((Loader::get()->isModLoaded("joseii.ventilla") && Loader::get()->getLoadedMod("joseii.ventilla")->getSettingValue<bool>("play-in-pause-menu")))) return;
 
 		manager->sound->setLoopCount(-1);
 		manager->system->playSound(manager->sound, nullptr, false, &(manager->channel));
